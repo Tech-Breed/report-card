@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Report Card - AMIS</title>
+    
+  <style>
+  :root {
+    --primary: #0b4a6f;
+    --secondary: #f2f4f8;
+    --border: #dcdcdc;
+    --text-dark: #222;
+    --text-muted: #555;
+    --highlight: #f9fafb;
+  }
+
+  body {
+    margin: 0;
+    padding: 20px;
+    background: var(--secondary);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-dark);
+  }
+
+  .report-card {
+    max-width: 1100px; /* expanded to fit table */
+    margin: auto;
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-x: hidden; /* prevent overflow */
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 12px;
+  }
+  
+  .header-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.student-photo {
+  width: 90px;
+  height: 90px;
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  object-fit: cover;
+  background: #f0f0f0;
+}
+
+.school-info {
+  text-align: center;
+}
+
+  
+  .school-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary);
+  }
+  .school-subtitle {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .school-motto {
+    font-size: 14px;
+    margin-top: 4px;
+    font-style: italic;
+  }
+  .contact-info {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+  .term-title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  /* Student info */
+  .student-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+  }
+  .info-row {
+    background: var(--highlight);
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .info-label {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+
+  /* Summary section */
+  .summary-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .summary-box {
+    background: var(--highlight);
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .summary-label {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .summary-value {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 4px;
+  }
+
+  /* Section titles */
+  .section-title {
+    font-weight: bold;
+    font-size: 15px;
+    text-align: center;
+    color: var(--primary);
+    text-transform: uppercase;
+    padding: 8px 0;
+    border-top: 2px solid var(--border);
+    border-bottom: 2px solid var(--border);
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    font-size: 13px;
+    table-layout: auto;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px;
+    text-align: center;
+  }
+  th {
+    background: var(--highlight);
+    font-weight: 600;
+    font-size: 12px;
+  }
+  td {
+    font-size: 12px;
+  }
+  .subject-name {
+    text-align: left;
+    font-weight: 500;
+  }
+
+  /* Grading */
+  .grading-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+  }
+  .grade-item {
+    display: flex;
+    justify-content: space-between;
+    background: var(--highlight);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  /* Domains */
+  .domains-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .domain-box {
+    background: var(--highlight);
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .domain-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-align: center;
+    font-size: 13px;
+  }
+  .domain-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 13px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .domain-item:last-child {
+    border-bottom: none;
+  }
+
+  /* Keys */
+  .keys-section {
+    text-align: center;
+  }
+  .keys-title {
+    font-weight: bold;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+  .keys-content {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* Remarks */
+  .remarks-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 12px;
+  }
+  .remark-box {
+    background: var(--highlight);
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .remark-title {
+    font-weight: bold;
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+  .remark-text {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  /* Footer */
+  .footer-info {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+    color: var(--text-muted);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .report-card {
+      padding: 15px;
+    }
+    table {
+      font-size: 12px;
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    th, td {
+      padding: 6px;
+    }
+  }
+</style>
+
+</head>
+<body>
+    <div class="report-card"> 
+        <<div class="header">
+  <div class="header-top">
+    <img src="student-photo.jpg" alt="Student Photo" class="student-photo">
+    <div class="school-info">
+      <div class="school-name">ASH MERLYN INTERNATIONAL SCHOOL</div>
+      <div class="school-subtitle">(COLLEGE)</div>
+      <div class="school-motto">Building Global Champions</div>
+      <div class="contact-info">
+        New Road, Road 1 Victory Estate Elelenwo, Port Harcourt, Rivers State<br>
+        Email: info@ashmerlynintsch.com | 234-8033090068
+      </div>
+    </div>
+  </div>
+</div>
+
+        <div class="term-title">THIRD TERM 2024/2025 PROMOTIONAL RESULT</div>
+
+         Student Information 
+        <div class="student-info">
+            <div class="info-row">
+                <span class="info-label">NAME:</span>
+                <span>DINA FAVOUR OLUWATOBI</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">GENDER:</span>
+                <span>MALE</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">REGISTRATION NUMBER:</span>
+                <span>AMIS/SEC/24/25/036</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">CLASS:</span>
+                <span>YEAR 7</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">ARM:</span>
+                <span>JOY</span>
+            </div>
+        </div>
+
+         Summary Section 
+        <div class="summary-section">
+            <div class="summary-grid">
+                <div class="summary-box">
+                    <div class="summary-label">3RD TERM TOTAL SCORE:</div>
+                    <div class="summary-value">1087</div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-label">3RD TERM CLASS AVERAGE:</div>
+                    <div class="summary-value">57.23</div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-label">3RD TERM ARM AVERAGE:</div>
+                    <div class="summary-value">66.06</div>
+                </div>
+            </div>
+            <div class="summary-grid">
+                <div class="summary-box">
+                    <div class="summary-label">TOTAL AVERAGE (SESSION):</div>
+                    <div class="summary-value">169.68</div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-label">CUMMULATIVE AVERAGE:</div>
+                    <div class="summary-value">56.56</div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-label">3RD TERM AVERAGE SCORE:</div>
+                    <div class="summary-value">63.25</div>
+                </div>
+            </div>
+            <div class="summary-grid">
+                <div class="summary-box">
+                    <div class="summary-label">CUMM. CLASS POSITION:</div>
+                    <div class="summary-value">85th out of 108</div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-label">3RD TERM CLASS POSITION:</div>
+                    <div class="summary-value">23rd out of 28</div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-label">3RD TERM ARM POSITION:</div>
+                    <div class="summary-value">3rd out of 108</div>
+                </div>
+            </div>
+            <div class="summary-grid">
+                <div class="summary-box">
+                    <div class="summary-label">CUMMULATIVE ARM POSITION:</div>
+                    <div class="summary-value">22nd out of 28</div>
+                </div>
+            </div>
+        </div>
+
+         Cognitive Domain 
+        <div class="section-title">COGNITIVIE DOMAIN</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>S/N</th>
+                    <th>Subject</th>
+                    <th>3rd Term CA (40)</th>
+                    <th>3rd Term Exam (60)</th>
+                    <th>3rd Term Total (100)</th>
+                    <th>2nd Term Total (100)</th>
+                    <th>1st Term Total (100)</th>
+                    <th>Cumm. Average (100)</th>
+                    <th>Cumm. Position</th>
+                    <th>Grade</th>
+                    <th>Remark</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td class="subject-name">ENGLISH LANGUAGE</td>
+                    <td>24.5</td>
+                    <td>35.5</td>
+                    <td>60.0</td>
+                    <td>49.5</td>
+                    <td>64.5</td>
+                    <td>58.0</td>
+                    <td>79th</td>
+                    <td>C-</td>
+                    <td>Good</td>
+                </tr>
+                
+                <tr>
+                    <td>2</td>
+                    <td class="subject-name">MATHEMATICS</td>
+                    <td>21.8</td>
+                    <td>23.4</td>
+                    <td>45.2</td>
+                    <td>41.7</td>
+                    <td>47.6</td>
+                    <td>44.8</td>
+                    <td>74th</td>
+                    <td>D</td>
+                    <td>Pass</td>
+                </tr>
+                
+                <tr>
+                    <td>3</td>
+                    <td class="subject-name">CIVIC EDUCATION</td>
+                    <td>23.5</td>
+                    <td>34.0</td>
+                    <td>58</td>
+                    <td>67.2</td>
+                    <td>71.0</td>
+                    <td>65.2</td>
+                    <td>71st</td>
+                    <td>C+</td>
+                    <td>Good</td>
+                </tr>
+                
+                <tr>
+                    <td>4</td>
+                    <td class="subject-name">BASIC SCIENCE</td>
+                    <td>19.0</td>
+                    <td>46.0</td>
+                    <td>65.0</td>
+                    <td>63.5</td>
+                    <td>62.5</td>
+                    <td>63.7</td>
+                    <td>77th</td>
+                    <td>C</td>
+                    <td>Good</td>
+                </tr>
+                
+                <tr>
+                    <td>5</td>
+                    <td class="subject-name">CHEMISTRY</td>
+                    <td>25.7</td>
+                    <td>42.6</td>
+                    <td>68.3</td>
+                    <td>73.3</td>
+                    <td>84.7</td>
+                    <td>75.4</td>
+                    <td>67th</td>
+                    <td>B</td>
+                    <td>Very Good</td>
+                </tr>
+                
+                <tr>
+                    <td>6</td>
+                    <td class="subject-name">PHYSICS</td>
+                    <td>27.8</td>
+                    <td>22.5</td>
+                    <td>50.3</td>
+                    <td>40.5</td>
+                    <td>47.3</td>
+                    <td>46.0</td>
+                    <td>83rd</td>
+                    <td>D</td>
+                    <td>Pass</td>
+                </tr>
+                
+                <tr>
+                    <td>7</td>
+                    <td class="subject-name">BIOLOGY</td>
+                    <td>28.5</td>
+                    <td>33.6</td>
+                    <td>62.1</td>
+                    <td>59.6</td>
+                    <td>61.8</td>
+                    <td>61.2</td>
+                    <td>72nd</td>
+                    <td>C</td>
+                    <td>Good</td>
+                </tr>
+                
+                <tr>
+                    <td>8</td>
+                    <td class="subject-name">CULTURAL AND CREATIVE ARTS</td>
+                    <td>37.0</td>
+                    <td>35.0</td>
+                    <td>72.0</td>
+                    <td>66.5</td>
+                    <td>62.0</td>
+                    <td>66.8</td>
+                    <td>62nd</td>
+                    <td>C+</td>
+                    <td>Good</td>
+                </tr>
+                
+                <tr>
+                    <td>9</td>
+                    <td class="subject-name">FRENCH LANGUAGE</td>
+                    <td>32.0</td>
+                    <td>43.0</td>
+                    <td>75.0</td>
+                    <td>70.5</td>
+                    <td>59.0</td>
+                    <td>68.2</td>
+                    <td>91st</td>
+                    <td>C+</td>
+                    <td>Good</td>
+                </tr>
+                
+                <tr>
+                    <td>10</td>
+                    <td class="subject-name">IGBO LANGUAGE</td>
+                    <td>27.3</td>
+                    <td>30.0</td>
+                    <td>57.3</td>
+                    <td>66.2</td>
+                    <td>54.3</td>
+                    <td>59.2</td>
+                    <td>97th</td>
+                    <td>C</td>
+                    <td>Good</td>
+                </tr>
+                
+                <tr>
+                    <td>11</td>
+                    <td class="subject-name">HISTORY</td>
+                    <td>30.2</td>
+                    <td>31.2</td>
+                    <td>61.4</td>
+                    <td>61.7</td>
+                    <td>60.3</td>
+                    <td>61.1</td>
+                    <td>69th</td>
+                    <td>C</td>
+                    <td>Good</td>
+                </tr>
+                
+                <tr>
+                    <td>12</td>
+                    <td class="subject-name">AGRICULTURAL SCIENCE</td>
+                    <td>16.6</td>
+                    <td>35.4</td>
+                    <td>52.0</td>
+                    <td>64.8</td>
+                    <td>59.7</td>
+                    <td>58.8</td>
+                    <td>86th</td>
+                    <td>C-</td>
+                    <td>Good</td>
+                </tr>
+                
+                <tr>
+                    <td>13</td>
+                    <td class="subject-name">HOME ECONOMICS</td>
+                    <td>20.3</td>
+                    <td>27.0</td>
+                    <td>47.3</td>
+                    <td>54.1</td>
+                    <td>73.8</td>
+                    <td>58.4</td>
+                    <td>87th</td>
+                    <td>C-</td>
+                    <td>Good</td>
+                </tr>
+                
+                <tr>
+                    <td>14</td>
+                    <td class="subject-name">BUSINESS STUDIES</td>
+                    <td>30.5</td>
+                    <td>36.6</td>
+                    <td>67.1</td>
+                    <td>42.1</td>
+                    <td>70.0</td>
+                    <td>59.7</td>
+                    <td>61st</td>
+                    <td>C</td>
+                    <td>Good</td>
+                </tr>
+                
+                <tr>
+                    <td>15</td>
+                    <td class="subject-name">SOCIAL STUDIES</td>
+                    <td>26.5</td>
+                    <td>22.2</td>
+                    <td>48.7</td>
+                    <td>48.9</td>
+                    <td>58.8</td>
+                    <td>52.1</td>
+                    <td>84th</td>
+                    <td>D+</td>
+                    <td>Pass</td>
+                </tr>
+                
+                <tr>
+                    <td>16</td>
+                    <td class="subject-name">CHRISTIAN RELIGIOUS STUDIES</td>
+                    <td>24.6</td>
+                    <td>19.2</td>
+                    <td>43.8</td>
+                    <td>53.6</td>
+                    <td>34.4</td>
+                    <td>43.9</td>
+                    <td>83rd</td>
+                    <td>D-</td>
+                    <td>Pass</td>
+                </tr>
+                
+                <tr>
+                    <td>17</td>
+                    <td class="subject-name">BASIC TECHNOLOGY</td>
+                    <td>23.3</td>
+                    <td>23.3</td>
+                    <td>46.6</td>
+                    <td>58.2</td>
+                    <td>26.5</td>
+                    <td>43.7</td>
+                    <td>89th</td>
+                    <td>D-</td>
+                    <td>Pass</td>
+                </tr>
+                
+                <tr>
+                    <td>18</td>
+                    <td class="subject-name">PHYSICAL AND HEALTH EDUCATION</td>
+                    <td>26.4</td>
+                    <td>24.5</td>
+                    <td>50.9</td>
+                    <td>29.8</td>
+                    <td>45.5</td>
+                    <td>42.1</td>
+                    <td>100th</td>
+                    <td>D-</td>
+                    <td>Pass</td>
+                </tr>
+                
+                <tr>
+                    <td>19</td>
+                    <td class="subject-name">COMPUTER SCIENCE</td>
+                    <td>26.3</td>
+                    <td>31.0</td>
+                    <td>57.3</td>
+                    <td>39.5</td>
+                    <td>42.5</td>
+                    <td>46.4</td>
+                    <td>86th</td>
+                    <td>D</td>
+                    <td>Pass</td>
+                </tr>
+            </tbody>
+        </table>
+
+         Grading System 
+        <div class="grading-section">
+            <div class="grade-item"><span>96 – 100   A+</span><span>EXCELLENT</span></div>
+            <div class="grade-item"><span>66 – 69    C+</span><span>GOOD</span></div>
+            <div class="grade-item"><span>90 – 95     A</span><span>VERY GOOD</span></div>
+            <div class="grade-item"><span>60 – 65    C</span><span>GOOD</span></div>
+            <div class="grade-item"><span>86 – 89     A-</span><span>VERY GOOD</span></div>
+            <div class="grade-item"><span>56 – 59    C-</span><span>GOOD</span></div>
+            <div class="grade-item"><span>80 – 85     B+</span><span>VERY GOOD</span></div>
+            <div class="grade-item"><span>50 – 55    D+</span><span>PASS</span></div>
+            <div class="grade-item"><span>76 – 79     B</span><span>VERY GOOD</span></div>
+            <div class="grade-item"><span>46 – 49    D</span><span>PASS</span></div>
+            <div class="grade-item"><span>70 – 75     B-</span><span>VERY GOOD</span></div>
+            <div class="grade-item"><span>40 – 45    D-</span><span>PASS</span></div>
+            <div class="grade-item"><span>0-39     F</span><span>FAILS</span></div>
+            <div class="grade-item"><span>NO</span><span>Subject not Offered</span></div>
+        </div>
+
+         Domains Section 
+        <div class="domains-section">
+             Affective Domain 
+            <div class="domain-box">
+                <div class="domain-title">AFFECTIVE DOMAIN</div>
+                <div class="domain-item">
+                    <span>Punctuality</span>
+                    <span>5</span>
+                </div>
+                <div class="domain-item">
+                    <span>Neateness</span>
+                    <span>5</span>
+                </div>
+                <div class="domain-item">
+                    <span>Respect to Authority</span>
+                    <span>4</span>
+                </div>
+                <div class="domain-item">
+                    <span>Self Control</span>
+                    <span>4</span>
+                </div>
+                <div class="domain-item">
+                    <span>Obedience</span>
+                    <span>5</span>
+                </div>
+                <div class="domain-item">
+                    <span>Relationship with Others</span>
+                    <span>5</span>
+                </div>
+            </div>
+
+             Psychomotor Domain 
+            <div class="domain-box">
+                <div class="domain-title">PSYCHOMOTOR DOMAIN</div>
+                <div class="domain-item">
+                    <span>Handwriting</span>
+                    <span>4</span>
+                </div>
+                <div class="domain-item">
+                    <span>Class Attendance</span>
+                    <span>5</span>
+                </div>
+                <div class="domain-item">
+                    <span>Study Habit</span>
+                    <span>4</span>
+                </div>
+                <div class="domain-item">
+                    <span>Team Spirit</span>
+                    <span>5</span>
+                </div>
+                <div class="domain-item">
+                    <span>Handling of Materials</span>
+                    <span>4</span>
+                </div>
+                <div class="domain-item">
+                    <span>Sport</span>
+                    <span>4</span>
+                </div>
+                <div class="domain-item">
+                    <span>Extracurricular Activities</span>
+                    <span>5</span>
+                </div>
+            </div>
+        </div>
+
+         Keys to Rating 
+        <div class="keys-section">
+            <div class="keys-title">KEYS TO RATING</div>
+            <div class="keys-content">
+                5 – Excellent show of trait<br>
+                4 – High Level show of trait<br>
+                3 – Acceptable show of trait<br>
+                2 – Minimal show of trait<br>
+                1 – No Regard for the trait
+            </div>
+        </div>
+
+         Remarks Section 
+        <div class="remarks-section">
+            <div class="remark-box">
+                <div class="remark-title">Class Teacher's Remark:</div>
+                <div class="remark-text">Oluwatobi is very quiet in class; however, I encouraged to participate more in class discussions.</div>
+            </div>
+
+            <div class="remark-box">
+                <div class="remark-title">Principal's Remark:</div>
+                <div class="remark-text">Fairly good result but not your best. Promoted to Year 8.</div>
+            </div>
+        </div>
+
+         Footer 
+        <div class="footer-info">
+            <div class="footer-item">Next Term Begins: SEPT. 8TH, 2025</div>
+            <div class="footer-item">Date Issued: JULY 30TH, 2025</div>
+        </div>
+    </div>
+</body>
+</html>
